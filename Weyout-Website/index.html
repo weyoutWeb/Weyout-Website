@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uploading...please wait</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
+        /* General Styles */
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Courier Prime', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            transition: background 0.4s ease-in-out;
+        }
+
+        /* Container */
+        .container {
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        /* Hidden Message - Only visible during glitches */
+        .hidden-message {
+            display: none;
+            color: #ff4444;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 68, 68, 0.9);
+        }
+
+        /* Lost Transmission Hidden Message */
+        .lost-transmission {
+            display: none;
+            font-size: 1em;
+            font-weight: bold;
+            color: #888888;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Main Title */
+        .glitch {
+            font-size: 3em;
+            font-weight: bold;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Creepy Text */
+        .creepy-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Countdown Timer */
+        #countdown {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Link */
+        .link a {
+            color: #ff4444;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Static Noise Overlay */
+        .static {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/noise.png');
+            opacity: 0.07;
+            z-index: -1;
+            animation: staticFlicker 1.5s infinite alternate;
+        }
+
+        @keyframes staticFlicker {
+            0% { opacity: 0.05; }
+            100% { opacity: 0.15; }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="static"></div>
+    <div class="container">
+        <h1 class="glitch" id="title">Uploading...please wait</h1>
+        <p class="creepy-text" id="creepyText">Not everything lost wants to stay hidden.</p>
+        <div id="countdown">
+            <span id="days">00</span> Days 
+            <span id="hours">00</span> Hours 
+            <span id="minutes">00</span> Minutes 
+            <span id="seconds">00</span> Seconds
+        </div>
+        <p class="hidden-message" id="hiddenMessage">YOU WERE NOT SUPPOSED TO SEE THIS</p>
+        <p class="link">
+            <a href="home.html" id="hiddenLink">Find out more</a>
+        </p>
+        <p class="lost-transmission" id="lostTransmission">THIS IS ALL A CYCLE - LostTransmissionA</p>
+    </div>
+
+    <script>
+        const targetDate = new Date("March 21, 2025 00:00:00").getTime();
+        const body = document.body;
+        const title = document.getElementById("title");
+        const creepyText = document.getElementById("creepyText");
+        const countdown = document.getElementById("countdown");
+        const hiddenMessage = document.getElementById("hiddenMessage");
+        const hiddenLink = document.getElementById("hiddenLink");
+        const lostTransmission = document.getElementById("lostTransmission");
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = days;
+                document.getElementById("hours").innerText = hours;
+                document.getElementById("minutes").innerText = minutes;
+                document.getElementById("seconds").innerText = seconds;
+            } else {
+                document.getElementById("countdown").innerText = "The time has come...";
+            }
+        }
+
+        // Quick glitch effect (text temporarily changes to hidden message)
+        function quickGlitch() {
+            const glitchMessages = [
+                "YOU WERE NOT SUPPOSED TO SEE THIS",
+                "THEY ARE WATCHING",
+                "LOST SIGNAL DETECTED",
+                "RECEIVING UNKNOWN TRANSMISSION..."
+            ];
+            let randomMessage = glitchMessages[Math.floor(Math.random() * glitchMessages.length)];
+
+            title.innerText = randomMessage;
+            creepyText.innerText = randomMessage;
+            countdown.innerText = randomMessage;
+
+            // Change link during glitch
+            hiddenLink.innerText = "ENTER THE UNKNOWN";
+            hiddenLink.href = "https://lost-thread.ca";
+
+            hiddenMessage.style.display = "block";
+
+            setTimeout(() => {
+                title.innerText = "RUE.EXE";
+                creepyText.innerText = "TURN BACK BEFORE IT'S TO LATE.";
+                hiddenMessage.style.display = "none";
+                updateCountdown(); // Properly refresh countdown after glitch
+
+                // Reset link back to "Find out more"
+                hiddenLink.innerText = "Find out more";
+                hiddenLink.href = "about-us.html";
+
+            }, 200); // Glitch lasts only 200ms
+        }
+
+        // Display Lost Transmission hidden message randomly
+        function showLostTransmission() {
+            if (Math.random() < 0.5) { // 50% chance during each glitch
+                lostTransmission.style.display = "block";
+                lostTransmission.style.opacity = "1";
+
+                setTimeout(() => {
+                    lostTransmission.style.opacity = "0";
+                    lostTransmission.style.display = "none";
+                }, 800); // Message stays visible for 800ms
+            }
+        }
+
+        // Random time for glitches to make it unpredictable (between 8-12 seconds)
+        function randomGlitchTrigger() {
+            setTimeout(() => {
+                quickGlitch();
+                showLostTransmission();
+                randomGlitchTrigger();
+            }, Math.floor(Math.random() * (12000 - 8000) + 8000));
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        randomGlitchTrigger(); // Start random glitch cycle
+    // Rapid flickering text effect
+    function showFlickerText() {
+            const flickerMessages = [
+                "LOADING...",
+                "CHECKING MEMORY",
+                "SYSTEM ERROR",
+                "LOST CONNECTION",
+                "DATA RECOVERY FAILED",
+                "UNKNOWN SOURCE DETECTED"
+            ];
+            let randomMessage = flickerMessages[Math.floor(Math.random() * flickerMessages.length)];
+
+            flickerText.innerText = randomMessage;
+            flickerText.style.opacity = "1";
+            flickerText.style.left = Math.random() * 80 + "%";
+            flickerText.style.top = Math.random() * 80 + "%";
+
+            setTimeout(() => {
+                flickerText.style.opacity = "0";
+            }, Math.random() * (300 - 100) + 100);
+        }
+
+        setInterval(updateCountdown, 1000);
+        setInterval(showFlickerText, 1000);
+        updateCountdown();
+        randomGlitchTrigger();
+
+    </script>
+</body>
+</html>
+ 
